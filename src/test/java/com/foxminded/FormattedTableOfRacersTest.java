@@ -1,11 +1,10 @@
 package com.foxminded;
 
+import com.foxminded1.*;
 import org.junit.jupiter.api.Test;
-
+import com.foxminded3.*;
 import java.io.IOException;
-
 import static org.junit.jupiter.api.Assertions.*;
-
 class FormattedTableOfRacersTest {
     RacersFile impl = new RacersFileDao();
     FormattedTableOfRacers test = new FormattedTableOfRacers(impl);

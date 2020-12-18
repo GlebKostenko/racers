@@ -1,6 +1,8 @@
 package com.foxminded;
 
 import java.io.IOException;
+import com.foxminded1.*;
+import com.foxminded3.*;
 
 public class Main {
     public static void main(String[] args) throws IOException,NullPointerException{

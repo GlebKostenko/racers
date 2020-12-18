@@ -1,12 +1,14 @@
-package com.foxminded;
+package com.foxminded3;
 
+import com.foxminded1.RacersFile;
+import com.foxminded2.RacersService;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map.Entry;
 
 public class FormattedTableOfRacers {
     RacersService implementation;
-    FormattedTableOfRacers(RacersFile impl){
+    public FormattedTableOfRacers(RacersFile impl){
         implementation = new RacersService(impl);
     }
     public String makeTableOfRacers() throws IOException {

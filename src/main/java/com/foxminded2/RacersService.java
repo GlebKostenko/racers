@@ -1,8 +1,11 @@
-package com.foxminded;
+package com.foxminded2;
+
+import com.foxminded1.RacersFile;
 
 import java.io.IOException;
 import java.util.*;
 import java.util.Map.Entry;
+
 
 public class RacersService {
 
@@ -31,8 +34,8 @@ public class RacersService {
         List<Entry<String[], String>> sortedTable = new ArrayList<Entry<String[], String>>(
                 set);
         Collections.sort(sortedTable, new Comparator<Entry<String[], String>>() {
-            public int compare(Map.Entry<String[], String> o1,
-                               Map.Entry<String[], String> o2) {
+            public int compare(Entry<String[], String> o1,
+                               Entry<String[], String> o2) {
                 return o1.getValue().compareTo(o2.getValue());
             }
         });
