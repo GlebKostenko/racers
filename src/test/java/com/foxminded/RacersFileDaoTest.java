@@ -3,19 +3,14 @@ package com.foxminded;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class GetDataTest {
-    private Path start = Paths.get("/home/gleb/foxmindedpr03/src/main/resources/start.log");
-    private Path end = Paths.get("/home/gleb/foxmindedpr03/src/main/resources/end.log");
-    private Path abbreviations = Paths.get("/home/gleb/foxmindedpr03/src/main/resources/abbreviations.txt");
-    private GetData test = new GetData(start,end,abbreviations);
+class RacersFileDaoTest {
+    private RacersFileDao test = new RacersFileDao();
 
     @Test
     void makeStartDataSet() throws IOException{
