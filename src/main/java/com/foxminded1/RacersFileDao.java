@@ -1,12 +1,17 @@
 package com.foxminded1;
 
 
+import javafx.util.Pair;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -32,35 +37,56 @@ public class RacersFileDao implements RacersFile {
 
     }
 
-    public HashMap<String, String[]> parseAbbreviations() throws IOException {
+    public List<Pair<String, String[]>> parseAbbreviations() throws IOException {
         List<String> abbreviations = makeAbbreviationsDataSet();
-        HashMap<String, String[]> result = new HashMap<>();
-        abbreviations.stream().forEach(x->{
+        List<Pair<String, String[]>> parsedAbbs = abbreviations.stream().map(x->{
             String[] infoAboutRacer = x.split("_");
             String racerAbbreviation = infoAboutRacer[0];
-            result.put(racerAbbreviation, new String[]{infoAboutRacer[1],infoAboutRacer[2]});
+            Pair<String,String[]> racerNameAndHisCarByAbbreviation =
+                    new Pair<>(racerAbbreviation,new String[]{infoAboutRacer[1],infoAboutRacer[2]});
+            return racerNameAndHisCarByAbbreviation;
+        }).collect(Collectors.toList());
+        Collections.sort(parsedAbbs, new Comparator<Pair<String, String[]>>() {
+            @Override
+            public int compare(Pair<String, String[]> o1, Pair<String, String[]> o2) {
+                return o1.getKey().compareTo(o2.getKey());
+            }
         });
-        return result;
+        return parsedAbbs;
     }
 
-    public HashMap<String,String> parseStartDataSet() throws IOException{
-        HashMap<String,String> result = new HashMap<>();
-        makeStartDataSet().stream().forEach(x->{
+    public List<Pair<String, String>> parseStartDataSet() throws IOException{
+        List<Pair<String, String>> infAboutStartTime = makeStartDataSet().stream().map(x->{
             String racerAbbreviation = x.substring(0,3);
             String startTime = getStartOrEndTimeFromString(x);
-            result.put(racerAbbreviation,startTime);
+            Pair<String,String> startTimeOfRacer =
+                    new Pair<>(racerAbbreviation, startTime);
+            return startTimeOfRacer;
+        }).collect(Collectors.toList());
+        Collections.sort(infAboutStartTime, new Comparator<Pair<String, String>>() {
+            @Override
+            public int compare(Pair<String, String> o1, Pair<String, String> o2) {
+                return o1.getKey().compareTo(o2.getKey());
+            }
         });
-        return result;
+        return infAboutStartTime;
     }
 
-    public HashMap<String,String> parseEndDataSet() throws IOException{
-        HashMap<String,String> result = new HashMap<>();
-        makeEndDataSet().stream().forEach(x->{
+    public List<Pair<String, String>> parseEndDataSet() throws IOException{
+        List<Pair<String, String>> infAboutEndTime = makeEndDataSet().stream().map(x->{
             String racerAbbreviation = x.substring(0,3);
             String endTime = getStartOrEndTimeFromString(x);
-            result.put(racerAbbreviation,endTime);
+            Pair<String,String> startTimeOfRacer =
+                    new Pair<>(racerAbbreviation, endTime);
+            return startTimeOfRacer;
+        }).collect(Collectors.toList());
+        Collections.sort(infAboutEndTime, new Comparator<Pair<String, String>>() {
+            @Override
+            public int compare(Pair<String, String> o1, Pair<String, String> o2) {
+                return o1.getKey().compareTo(o2.getKey());
+            }
         });
-        return result;
+        return infAboutEndTime;
     }
 
     public String calculateTopTimeForRacer(String startTime, String endTime) {

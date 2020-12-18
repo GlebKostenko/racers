@@ -1,10 +1,12 @@
 package com.foxminded2;
 
 import com.foxminded1.RacersFile;
+import javafx.util.Pair;
 
 import java.io.IOException;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 
 public class RacersService {
@@ -15,31 +17,29 @@ public class RacersService {
         implementation = impl;
     }
 
-    public List<Entry<String[], String>> makeRacersTable() throws IOException {
-        HashMap<String[],String> infAboutRacers = new HashMap<>();
-        HashMap<String,String[]> parsedAbbreviations = implementation.parseAbbreviations();
-        HashMap<String,String> parsedStartTime = implementation.parseStartDataSet();
-        HashMap<String,String> parsedEndTime = implementation.parseEndDataSet();
-        Set<String> abbreviationsAsKeys = parsedAbbreviations.keySet();
-        abbreviationsAsKeys.stream().forEach(x->{
-            String abbreviationOfRacer = x;
-            String startTimeForRacer = parsedStartTime.get(x);
-            String endTimeForRacer = parsedEndTime.get(x);
+    public List<RacerData> makeRacersTable() throws IOException {
+        List<Pair<String, String[]>> parsedAbbreviations = implementation.parseAbbreviations();
+        List<Pair<String, String>> parsedStartTime = implementation.parseStartDataSet();
+        List<Pair<String, String>> parsedEndTime = implementation.parseEndDataSet();
+        List<RacerData> infAboutRacers = parsedAbbreviations.stream().map(x->{
+            String abbreviationOfRacer = x.getKey();
+            String startTimeForRacer = parsedStartTime.stream()
+                    .filter(p -> p.getKey().equals(abbreviationOfRacer)).collect(Collectors.toList()).get(0).getValue();
+            String endTimeForRacer = parsedEndTime.stream()
+                    .filter(p -> p.getKey().equals(abbreviationOfRacer)).collect(Collectors.toList()).get(0).getValue();
             String topTime = implementation
                     .calculateTopTimeForRacer(startTimeForRacer,endTimeForRacer);
-            infAboutRacers.put(parsedAbbreviations.get(x),topTime);
-        });
+            RacerData racer = new RacerData(x.getValue(),topTime);
+            return racer;
+        }).collect(Collectors.toList());
 
-        Set<Entry<String[], String>> set = infAboutRacers.entrySet();
-        List<Entry<String[], String>> sortedTable = new ArrayList<Entry<String[], String>>(
-                set);
-        Collections.sort(sortedTable, new Comparator<Entry<String[], String>>() {
-            public int compare(Entry<String[], String> o1,
-                               Entry<String[], String> o2) {
-                return o1.getValue().compareTo(o2.getValue());
+        Collections.sort(infAboutRacers, new Comparator<RacerData>() {
+            @Override
+            public int compare(RacerData o1, RacerData o2) {
+                return o1.getTopTime().compareTo(o2.getTopTime());
             }
         });
-        return sortedTable;
+        return infAboutRacers;
 
     }
 }
