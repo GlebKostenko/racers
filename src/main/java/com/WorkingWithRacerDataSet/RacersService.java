@@ -6,10 +6,19 @@ import com.RacerDataSet.RacersFile;
 import com.RacerDataSet.StartTimeByAbbreviation;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.time.LocalTime.ofNanoOfDay;
 
 
 public class RacersService {
@@ -24,14 +33,14 @@ public class RacersService {
         List<ParsedAbbreviations> parsedAbbreviations = implementation.parseAbbreviations();
         List<StartTimeByAbbreviation> parsedStartTime = implementation.parseStartDataSet();
         List<EndTimeByAbbreviation> parsedEndTime = implementation.parseEndDataSet();
-        List<RacerData> infAboutRacers = parsedAbbreviations.stream().map(x->{
+        List<RacerData> infAboutRacers = parsedAbbreviations.stream().map(x -> {
             String abbreviationOfRacer = x.getAbbreviationOfRacer();
             String startTimeForRacer = parsedStartTime.stream()
                     .filter(p -> p.getRacerAbbreviation().equals(abbreviationOfRacer)).findAny().get().getStartTimeOfRacer();
             String endTimeForRacer = parsedEndTime.stream()
                     .filter(p -> p.getRacerAbbreviation().equals(abbreviationOfRacer)).findAny().get().getEndTimeOfRacer();
-            String topTime = calculateTopTimeForRacer(startTimeForRacer,endTimeForRacer);
-            RacerData racer = new RacerData(x.getRacerName(),x.getRacerCar(),topTime);
+            String topTime = calculateTopTimeForRacer(startTimeForRacer, endTimeForRacer);
+            RacerData racer = new RacerData(x.getRacerName(), x.getRacerCar(), topTime);
             return racer;
         }).sorted(new Comparator<RacerData>() {
             @Override
@@ -43,37 +52,9 @@ public class RacersService {
     }
 
     public String calculateTopTimeForRacer(String startTime, String endTime) {
-        StringBuilder result = new StringBuilder();
-        String[] parsedStartTime = startTime.split(":");
-        String[] parsedEndTime = endTime.split(":");
-        if (!parsedStartTime[0].equals(parsedEndTime[0])) {
-            int deltaHours = Integer.parseInt(parsedEndTime[0]) - Integer.parseInt(parsedStartTime[0]);
-            if (deltaHours < 10) {
-                result.append("0" + deltaHours + ":");
-            } else {
-                result.append(deltaHours + ":");
-            }
-        }
-        int deltaMinutes = Integer.parseInt(parsedEndTime[1]) - Integer.parseInt(parsedStartTime[1]);
-        double deltaSeconds = Double.parseDouble(parsedEndTime[2]) - Double.parseDouble(parsedStartTime[2]);
-        if (deltaSeconds < 0) {
-            deltaMinutes = deltaMinutes - 1;
-            deltaSeconds = 60.0 - Math.abs(deltaSeconds);
-        }
-        if (deltaMinutes < 10) {
-            result.append("0" + deltaMinutes + ":");
-            if (deltaSeconds < 10.0) {
-                result.append("0");
-            }
-            result.append(String.format("%.3f", deltaSeconds));
-        } else {
-            result.append(deltaMinutes + ":");
-            if (deltaSeconds < 10.0) {
-                result.append("0");
-            }
-            result.append(String.format("%.3f", deltaSeconds));
-        }
-        return result.toString();
+        LocalTime oldDate = LocalTime.parse(startTime);
+        LocalTime newDate = LocalTime.parse(endTime);
+        return LocalTime.ofNanoOfDay(Duration.between(oldDate,newDate).toNanos())
+                .format(DateTimeFormatter.ofPattern("mm:ss.SSS"));
     }
-
 }
