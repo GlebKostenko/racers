@@ -1,24 +1,17 @@
-package com.WorkingWithRacerDataSet;
+package com.racer.service;
 
-import com.RacerDataSet.EndTimeByAbbreviation;
-import com.RacerDataSet.ParsedAbbreviations;
-import com.RacerDataSet.RacersFile;
-import com.RacerDataSet.StartTimeByAbbreviation;
+import com.racer.dataset.EndTimeByAbbreviation;
+import com.racer.dataset.ParsedAbbreviations;
+import com.racer.dataset.RacersFile;
+import com.racer.dataset.StartTimeByAbbreviation;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.net.URISyntaxException;
 import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static java.time.LocalTime.ofNanoOfDay;
 
 
 public class RacersService {
@@ -29,10 +22,10 @@ public class RacersService {
         implementation = impl;
     }
 
-    public List<RacerData> makeRacersTable() throws IOException {
-        List<ParsedAbbreviations> parsedAbbreviations = implementation.parseAbbreviations();
-        List<StartTimeByAbbreviation> parsedStartTime = implementation.parseStartDataSet();
-        List<EndTimeByAbbreviation> parsedEndTime = implementation.parseEndDataSet();
+    public List<RacerData> makeRacersTable(String fileNameAbbreviations,String fileNameStart,String fileNameEnd) throws IOException, URISyntaxException {
+        List<ParsedAbbreviations> parsedAbbreviations = implementation.parseAbbreviations(fileNameAbbreviations);
+        List<StartTimeByAbbreviation> parsedStartTime = implementation.parseStartDataSet(fileNameStart);
+        List<EndTimeByAbbreviation> parsedEndTime = implementation.parseEndDataSet(fileNameEnd);
         List<RacerData> infAboutRacers = parsedAbbreviations.stream().map(x -> {
             String abbreviationOfRacer = x.getAbbreviationOfRacer();
             String startTimeForRacer = parsedStartTime.stream()
@@ -57,4 +50,5 @@ public class RacersService {
         return LocalTime.ofNanoOfDay(Duration.between(oldDate,newDate).toNanos())
                 .format(DateTimeFormatter.ofPattern("mm:ss.SSS"));
     }
+
 }
