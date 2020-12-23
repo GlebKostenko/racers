@@ -22,11 +22,11 @@ public class RacersService {
         implementation = impl;
     }
 
-    public List<RacerData> makeRacersTable(String fileNameAbbreviations,String fileNameStart,String fileNameEnd) throws IOException, URISyntaxException {
-        List<ParsedAbbreviations> parsedAbbreviations = implementation.parseAbbreviations(fileNameAbbreviations);
-        List<StartTimeByAbbreviation> parsedStartTime = implementation.parseStartDataSet(fileNameStart);
-        List<EndTimeByAbbreviation> parsedEndTime = implementation.parseEndDataSet(fileNameEnd);
-        List<RacerData> infAboutRacers = parsedAbbreviations.stream().map(x -> {
+    public List<RacerData> makeRacersTable() throws IOException {
+        List<ParsedAbbreviations> parsedAbbreviations = implementation.parseAbbreviations();
+        List<StartTimeByAbbreviation> parsedStartTime = implementation.parseStartDataSet();
+        List<EndTimeByAbbreviation> parsedEndTime = implementation.parseEndDataSet();
+        return parsedAbbreviations.stream().map(x -> {
             String abbreviationOfRacer = x.getAbbreviationOfRacer();
             String startTimeForRacer = parsedStartTime.stream()
                     .filter(p -> p.getRacerAbbreviation().equals(abbreviationOfRacer)).findAny().get().getStartTimeOfRacer();
@@ -41,7 +41,7 @@ public class RacersService {
                 return o1.getTopTime().compareTo(o2.getTopTime());
             }
         }).collect(Collectors.toList());
-        return infAboutRacers;
+
     }
 
     public String calculateTopTimeForRacer(String startTime, String endTime) {

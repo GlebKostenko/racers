@@ -11,8 +11,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class RacersFileDaoTest {
 
-    private RacersFileDao test = new RacersFileDao();
-
+    private RacersFileDao test;
+    private RacersFileDaoTest()throws URISyntaxException{
+        test = new RacersFileDao("testAbbreviations.txt","testStart.log","testEnd.log");
+    }
     @Test
     void parseAbbreviations() throws IOException, URISyntaxException {
         List<ParsedAbbreviations> expected = new ArrayList<ParsedAbbreviations>();
@@ -22,7 +24,7 @@ class RacersFileDaoTest {
                 ("MES","Marcus Ericsson","SAUBER FERRARI");
         expected.add(first);
         expected.add(second);
-        assertEquals(expected,test.parseAbbreviations("testAbbreviations.txt"));
+        assertEquals(expected,test.parseAbbreviations());
 
     }
 
@@ -35,7 +37,7 @@ class RacersFileDaoTest {
                 ("MES","12:04:45.513");
         expected.add(first);
         expected.add(second);
-        assertEquals(expected,test.parseStartDataSet("testStart.log"));
+        assertEquals(expected,test.parseStartDataSet());
     }
 
     @Test
@@ -47,6 +49,6 @@ class RacersFileDaoTest {
                 ("MES","12:05:58.778");
         expected.add(first);
         expected.add(second);
-        assertEquals(expected,test.parseEndDataSet("testEnd.log"));
+        assertEquals(expected,test.parseEndDataSet());
     }
 }

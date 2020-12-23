@@ -10,18 +10,12 @@ import java.util.stream.Collectors;
 
 public class FormattedTableOfRacers {
     private RacersService implementation;
-    private String fileNameAbbreviations;
-    private String fileNameStart;
-    private String fileNameEnd;
-    public FormattedTableOfRacers(RacersFile impl,String fileNameAbbreviations,String fileNameStart,String fileNameEnd){
-        implementation = new RacersService(impl);
-        this.fileNameAbbreviations =fileNameAbbreviations;
-        this.fileNameStart = fileNameStart;
-        this.fileNameEnd = fileNameEnd;
+    public FormattedTableOfRacers(RacersFile dataSet,RacersService impl){
+        implementation = impl;
     }
     public String makeTableOfRacers() throws IOException , URISyntaxException {
         StringBuilder result = new StringBuilder();
-        List<RacerData> sortedTable = implementation.makeRacersTable(fileNameAbbreviations,fileNameStart,fileNameEnd);
+        List<RacerData> sortedTable = implementation.makeRacersTable();
          String firstFiveteenPositions= sortedTable.stream().limit(15).map(x->{
                 int racerPos = sortedTable.indexOf(x) + 1;
                 return String.format("%3s %-20s|%-26s|%s\n",racerPos+".",x.getRacerName(),

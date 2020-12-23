@@ -13,11 +13,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class RacersFileDao implements RacersFile {
-    Path pathOfStart;
-    Path pathOfEnd ;
-    Path pathOfAbbs;
-    public List<ParsedAbbreviations> parseAbbreviations(String fileName) throws IOException,URISyntaxException{
-        pathOfAbbs = Paths.get(getFileFromResource( fileName).getPath());
+    private Path pathOfStart;
+    private Path pathOfEnd ;
+    private Path pathOfAbbs;
+    public RacersFileDao(String abbsFile,String startFile,String endFile) throws URISyntaxException{
+        pathOfAbbs = Paths.get(getFileFromResource(abbsFile).getPath());
+        pathOfStart = Paths.get(getFileFromResource(startFile).getPath());
+        pathOfEnd = Paths.get(getFileFromResource(endFile).getPath());
+
+    }
+    public List<ParsedAbbreviations> parseAbbreviations() throws IOException{
         return Files.lines(pathOfAbbs).map(x->{
                     String[] infoAboutRacer = x.split("_");
                     String racerAbbreviation = infoAboutRacer[0];
@@ -32,8 +37,7 @@ public class RacersFileDao implements RacersFile {
                 }).collect(Collectors.toList());
     }
 
-    public List<StartTimeByAbbreviation> parseStartDataSet(String fileName) throws IOException,URISyntaxException{
-        pathOfStart = Paths.get(getFileFromResource(fileName).getPath());
+    public List<StartTimeByAbbreviation> parseStartDataSet() throws IOException{
         return Files.lines(pathOfStart).map(x->{
                     String racerAbbreviation = x.substring(0,3);
                     String startTime = getStartOrEndTimeFromString(x);
@@ -49,9 +53,7 @@ public class RacersFileDao implements RacersFile {
 
     }
 
-    public List<EndTimeByAbbreviation> parseEndDataSet(String fileName) throws IOException,URISyntaxException{
-        pathOfEnd = Paths.get(getFileFromResource(fileName).getPath());
-
+    public List<EndTimeByAbbreviation> parseEndDataSet() throws IOException{
         return Files.lines(pathOfEnd).map(x->{
                     String racerAbbreviation = x.substring(0,3);
                     String endTime = getStartOrEndTimeFromString(x);

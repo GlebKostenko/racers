@@ -6,7 +6,7 @@ public class RacerData {
     private String racerName;
     private String racerCar;
     private String topTime;
-    RacerData(String racerName,String racerCar,String topTime){
+    public RacerData(String racerName,String racerCar,String topTime){
         this.racerName = racerName;
         this.racerCar = racerCar;
         this.topTime = topTime;

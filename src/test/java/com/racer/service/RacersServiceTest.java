@@ -27,16 +27,16 @@ class RacersServiceTest {
 
     @Test
     void makeRacersTable() throws IOException, URISyntaxException {
-        given(rf.parseAbbreviations("abs.txt"))
+        given(rf.parseAbbreviations())
                 .willReturn(Arrays.asList
                 (new ParsedAbbreviations("BHS", "Brendon Hartley", "SCUDERIA TORO ROSSO HONDA"),
                 new ParsedAbbreviations("MES", "Marcus Ericsson", "SAUBER FERRARI")));
-        given(rf.parseStartDataSet("st.log")).willReturn(Arrays.asList(
+        given(rf.parseStartDataSet()).willReturn(Arrays.asList(
                                                       new StartTimeByAbbreviation
                                                       ("BHS","12:14:51.985"),
                                                       new StartTimeByAbbreviation
                                                       ("MES","12:04:45.513")));
-        given(rf.parseEndDataSet("en.log")).willReturn(Arrays.asList(
+        given(rf.parseEndDataSet()).willReturn(Arrays.asList(
                                                       new EndTimeByAbbreviation
                                                       ("BHS","12:16:05.164"),
                                                       new EndTimeByAbbreviation
@@ -44,7 +44,7 @@ class RacersServiceTest {
         List<RacerData> expected = Arrays.asList(
                 new RacerData("Brendon Hartley","SCUDERIA TORO ROSSO HONDA","01:13.179"),
                 new RacerData("Marcus Ericsson","SAUBER FERRARI","01:13.265"));
-        assertEquals(expected,rs.makeRacersTable("abs.txt","st.log","en.log"));
+        assertEquals(expected,rs.makeRacersTable());
 
     }
 }

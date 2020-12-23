@@ -5,7 +5,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 public interface RacersFile {
-    List<ParsedAbbreviations> parseAbbreviations(String fileName) throws IOException, URISyntaxException;
-    List<StartTimeByAbbreviation> parseStartDataSet(String fileName) throws IOException,URISyntaxException;
-    List<EndTimeByAbbreviation> parseEndDataSet(String fileName) throws IOException,URISyntaxException;
+    List<ParsedAbbreviations> parseAbbreviations() throws IOException;
+    List<StartTimeByAbbreviation> parseStartDataSet() throws IOException;
+    List<EndTimeByAbbreviation> parseEndDataSet() throws IOException;
 }
