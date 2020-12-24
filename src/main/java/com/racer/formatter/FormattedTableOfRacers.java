@@ -9,13 +9,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class FormattedTableOfRacers {
-    private RacersService implementation;
-    public FormattedTableOfRacers(RacersFile dataSet,RacersService impl){
-        implementation = impl;
+    private RacersService serviceOfRacerDataSet;
+    public FormattedTableOfRacers(RacersFile dataSet,RacersService serviceOfRacerDataSet){
+        this.serviceOfRacerDataSet = serviceOfRacerDataSet;
     }
     public String makeTableOfRacers() throws IOException , URISyntaxException {
         StringBuilder result = new StringBuilder();
-        List<RacerData> sortedTable = implementation.makeRacersTable();
+        List<RacerData> sortedTable = serviceOfRacerDataSet.makeRacersTable();
          String firstFiveteenPositions= sortedTable.stream().limit(15).map(x->{
                 int racerPos = sortedTable.indexOf(x) + 1;
                 return String.format("%3s %-20s|%-26s|%s\n",racerPos+".",x.getRacerName(),

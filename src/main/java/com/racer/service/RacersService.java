@@ -6,7 +6,6 @@ import com.racer.dataset.RacersFile;
 import com.racer.dataset.StartTimeByAbbreviation;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -16,22 +15,20 @@ import java.util.stream.Collectors;
 
 public class RacersService {
 
-    private RacersFile implementation;
+    private RacersFile dataSet;
 
-    public RacersService(RacersFile impl) {
-        implementation = impl;
+    public RacersService(RacersFile dataSet) {
+        this.dataSet = dataSet;
     }
 
-    public List<RacerData> makeRacersTable() throws IOException {
-        List<ParsedAbbreviations> parsedAbbreviations = implementation.parseAbbreviations();
-        List<StartTimeByAbbreviation> parsedStartTime = implementation.parseStartDataSet();
-        List<EndTimeByAbbreviation> parsedEndTime = implementation.parseEndDataSet();
+    public List<RacerData> makeRacersTable() throws IOException{
+        List<ParsedAbbreviations> parsedAbbreviations = dataSet.parseAbbreviations();
+        List<StartTimeByAbbreviation> parsedStartTime = dataSet.parseStartDataSet();
+        List<EndTimeByAbbreviation> parsedEndTime = dataSet.parseEndDataSet();
         return parsedAbbreviations.stream().map(x -> {
             String abbreviationOfRacer = x.getAbbreviationOfRacer();
-            String startTimeForRacer = parsedStartTime.stream()
-                    .filter(p -> p.getRacerAbbreviation().equals(abbreviationOfRacer)).findAny().get().getStartTimeOfRacer();
-            String endTimeForRacer = parsedEndTime.stream()
-                    .filter(p -> p.getRacerAbbreviation().equals(abbreviationOfRacer)).findAny().get().getEndTimeOfRacer();
+            String startTimeForRacer = getStartTimeByAbbreviation(abbreviationOfRacer,parsedStartTime);
+            String endTimeForRacer = getEndTimeByAbbreviation(abbreviationOfRacer,parsedEndTime);
             String topTime = calculateTopTimeForRacer(startTimeForRacer, endTimeForRacer);
             RacerData racer = new RacerData(x.getRacerName(), x.getRacerCar(), topTime);
             return racer;
@@ -50,5 +47,13 @@ public class RacersService {
         return LocalTime.ofNanoOfDay(Duration.between(oldDate,newDate).toNanos())
                 .format(DateTimeFormatter.ofPattern("mm:ss.SSS"));
     }
+    private String getStartTimeByAbbreviation(String abbreviationOfRacer,List<StartTimeByAbbreviation> parsedStartTime){
+        return parsedStartTime.stream()
+                .filter(p -> p.getRacerAbbreviation().equals(abbreviationOfRacer)).findAny().get().getStartTimeOfRacer();
+    }
 
+    private String getEndTimeByAbbreviation(String abbreviationOfRacer,List<EndTimeByAbbreviation> parsedEndTime){
+        return parsedEndTime.stream()
+                .filter(p -> p.getRacerAbbreviation().equals(abbreviationOfRacer)).findAny().get().getEndTimeOfRacer();
+    }
 }
