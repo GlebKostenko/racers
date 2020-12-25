@@ -1,6 +1,5 @@
 package com.racer.formatter;
 
-import com.racer.dataset.RacersFile;
 import com.racer.service.RacerData;
 import com.racer.service.RacersService;
 import java.io.IOException;
@@ -10,7 +9,7 @@ import java.util.stream.Collectors;
 
 public class FormattedTableOfRacers {
     private RacersService serviceOfRacerDataSet;
-    public FormattedTableOfRacers(RacersFile dataSet,RacersService serviceOfRacerDataSet){
+    public FormattedTableOfRacers(RacersService serviceOfRacerDataSet){
         this.serviceOfRacerDataSet = serviceOfRacerDataSet;
     }
     public String makeTableOfRacers() throws IOException , URISyntaxException {

@@ -11,7 +11,7 @@ public class Main {
     public static void main(String[] args) throws IOException,NullPointerException ,URISyntaxException{
         RacersFile dataSet = new RacersFileDao("abbreviations.txt","start.log","end.log");
         RacersService impl = new RacersService(dataSet);
-        FormattedTableOfRacers table = new FormattedTableOfRacers(dataSet,impl);
+        FormattedTableOfRacers table = new FormattedTableOfRacers(impl);
         System.out.println(table.makeTableOfRacers());
     }
 }

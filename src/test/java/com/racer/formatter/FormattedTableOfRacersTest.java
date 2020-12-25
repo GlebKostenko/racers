@@ -15,13 +15,12 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 
 class FormattedTableOfRacersTest {
-    private RacersFile dataSet;
     @Mock
     private RacersService serviceOfRacerDataSet;
     private FormattedTableOfRacers formatter;
     FormattedTableOfRacersTest(){
         MockitoAnnotations.initMocks(this);
-        formatter = new FormattedTableOfRacers(dataSet,serviceOfRacerDataSet);
+        formatter = new FormattedTableOfRacers(serviceOfRacerDataSet);
     }
     @Test
     void makeTableOfRacers() throws IOException, URISyntaxException {
